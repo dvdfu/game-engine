@@ -1,17 +1,9 @@
 package com.dvdfu.game.handlers;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.dvdfu.game.visuals.Animation;
 
 public class Consts {
-	//public static final int ScreenHeight = 240;
-	//public static final int ScreenWidth = 400;
-	public static final BitmapFont Test = new BitmapFont(
-			Gdx.files.internal("data/test.fnt"));
-
-	public static final float Gravity = 0.2f;
-	public static final float SpriteSpeed = 10;
-
-	public static boolean F1;
-	public static int Difficulty = 1;
+	public static final int TPF = 15;
+	public static final Animation player = new Animation("player.png", 16, 16);
+	public static final Animation block = new Animation("blank.png", 16, 16);
 }

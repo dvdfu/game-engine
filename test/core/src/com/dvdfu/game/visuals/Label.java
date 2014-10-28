@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.dvdfu.game.handlers.Consts;
 
 public class Label extends Actor {
 	private String text;
@@ -18,7 +17,6 @@ public class Label extends Actor {
 
 	public Label(String text) {
 		this.text = text;
-		font = Consts.Test;
 		color = new Color(1, 1, 1, 1);
 		font.setColor(color);
 	}
