@@ -18,6 +18,7 @@ public class TestShader implements Shader {
     private int u_color;
     private int u_cam;
     private int u_light;
+    private int u_lightColor;
 
 	public void init() {
 		String vert = Gdx.files.internal("test.vert").readString();
@@ -29,6 +30,7 @@ public class TestShader implements Shader {
         u_color = program.getUniformLocation("u_color");
         u_cam = program.getUniformLocation("u_cam");
         u_light = program.getUniformLocation("u_light");
+        u_lightColor = program.getUniformLocation("u_lightColor");
 	}
 
 	public void dispose() {
@@ -46,9 +48,10 @@ public class TestShader implements Shader {
 
 	public void render(Renderable renderable) {
 		program.setUniformMatrix(u_worldTrans, renderable.worldTransform);
-		program.setUniformf(u_color, 0.5f, 0.5f, 0.5f);
+		program.setUniformf(u_color, 0.1f, 0.1f, 0.2f);
 		program.setUniformf(u_cam, camera.position);
-		program.setUniformf(u_light, 1, 1, 1);
+		program.setUniformf(u_light, 1.5f, 1f, 0.5f);
+		program.setUniformf(u_lightColor, 0.2f, 0.6f, 0.7f);
 		renderable.mesh.render(program, renderable.primitiveType, renderable.meshPartOffset, renderable.meshPartSize);
 	}
 
