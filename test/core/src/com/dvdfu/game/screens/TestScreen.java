@@ -1,5 +1,7 @@
 package com.dvdfu.game.screens;
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -35,6 +37,7 @@ public class TestScreen extends AbstractScreen {
 	private ModelInstance axisX;
 	private ModelInstance axisY;
 	private ModelInstance axisZ;
+	private ArrayList<ModelInstance> instances;
 	private Environment environment;
 	private Renderable renderable;
 	private RenderContext renderContext;
@@ -64,6 +67,12 @@ public class TestScreen extends AbstractScreen {
 				new Material(ColorAttribute.createDiffuse(Color.CYAN)),
 				Usage.Position | Usage.Normal | Usage.TextureCoordinates);
 		sphere = new ModelInstance(model);
+		instances = new ArrayList<ModelInstance>();
+		for (int i = 0; i < 1; i++) {
+			ModelInstance in = new ModelInstance(model);
+//			in.transform.set((i / 4) * 100, 0, (i % 4) * 100, 0, 0, 0, 0, i / 20f, i / 20f, i / 20f);
+			instances.add(in);
+		}
 		model = modelBuilder.createBox(50, 100, 150,
 				new Material(ColorAttribute.createDiffuse(Color.CYAN)),
 				Usage.Position | Usage.Normal | Usage.TextureCoordinates);
@@ -103,6 +112,9 @@ public class TestScreen extends AbstractScreen {
 	    shader.init();
 	    
 	    cam.position.set(0, 0, 1);
+	    cube1.transform.set(0, 150, 0, 0, 0, 0, 0);
+	    cube2.transform.set(0, 0, 150, 0, 0, 0, 0);
+	    cube3.transform.set(150, 0, 0, 0, 0, 0, 0);
 	}
 
 	public void render(float delta) {
@@ -113,7 +125,7 @@ public class TestScreen extends AbstractScreen {
 		while (timer >= 1) timer--;
 
 		camController.update();
-		cam.position.set(MathUtils.cos(MathUtils.PI2 * timer), MathUtils.sin(MathUtils.PI2 * timer), MathUtils.sin(MathUtils.PI2 * timer));
+		cam.position.set(MathUtils.cos(MathUtils.PI2 * timer), 0.5f, MathUtils.sin(MathUtils.PI2 * timer));
 		cam.lookAt(0, 0, 0);
 		cam.up.set(0, 1, 0);
 		cam.update();
@@ -125,10 +137,12 @@ public class TestScreen extends AbstractScreen {
 //		renderContext.end();
 
 		modelBatch.begin(cam);
-		modelBatch.render(sphere, shader);
-		modelBatch.render(cube1, shader);
-		modelBatch.render(cube2, shader);
-		modelBatch.render(cube3, shader);
+		for (int i = 0; i < instances.size(); i++) {
+			modelBatch.render(instances.get(i), shader);
+		}
+//		modelBatch.render(cube1, shader);
+//		modelBatch.render(cube2, shader);
+//		modelBatch.render(cube3, shader);
 //		modelBatch.render(axisX, shader);
 //		modelBatch.render(axisY, shader);
 //		modelBatch.render(axisZ, shader);

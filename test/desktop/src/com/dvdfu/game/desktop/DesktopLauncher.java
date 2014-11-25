@@ -7,8 +7,8 @@ import com.dvdfu.game.MainGame;
 public class DesktopLauncher {
 	public static void main(String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		config.width = 640;
-		config.height = 360;
+		config.width = 320;
+		config.height = 320;
 		config.resizable = false;
 		new LwjglApplication(new MainGame(), config);
 	}
