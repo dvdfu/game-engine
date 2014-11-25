@@ -4,18 +4,15 @@ import java.util.Stack;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.dvdfu.game.handlers.Input;
-import com.dvdfu.game.handlers.InputController;
 import com.dvdfu.game.screens.AbstractScreen;
-import com.dvdfu.game.screens.FrontScreen;
+import com.dvdfu.game.screens.TestScreen;
 
 public class MainGame extends Game {
 	private Stack<AbstractScreen> screens;
 
 	public void create() {
-		Gdx.input.setInputProcessor(new InputController());
 		screens = new Stack<AbstractScreen>();
-		enterScreen(new FrontScreen(this));
+		enterScreen(new TestScreen(this));
 	}
 
 	public void enterScreen(AbstractScreen screen) {
@@ -51,7 +48,6 @@ public class MainGame extends Game {
 		if (getScreen() != null) {
 			super.render();
 		}
-		Input.update();
 	}
 
 	public void resize(int width, int height) {
