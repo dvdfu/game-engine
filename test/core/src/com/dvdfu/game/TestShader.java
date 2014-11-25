@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g3d.Renderable;
 import com.badlogic.gdx.graphics.g3d.Shader;
-import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
 import com.badlogic.gdx.graphics.g3d.utils.RenderContext;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.GdxRuntimeException;
@@ -22,7 +21,9 @@ public class TestShader implements Shader {
     private int u_light;
     private int u_lightColor;
     private int u_texture;
+    private int u_normal;
     private Texture texture;
+    private Texture normal;
 
 	public void init() {
 		String vert = Gdx.files.internal("test.vert").readString();
@@ -36,9 +37,10 @@ public class TestShader implements Shader {
         u_light = program.getUniformLocation("u_light");
         u_lightColor = program.getUniformLocation("u_lightColor");
         u_texture = program.getUniformLocation("u_texture");
+        u_normal = program.getUniformLocation("u_normal");
 
 		texture = new Texture(Gdx.files.internal("tex.jpg"));
-		texture.bind(0);
+		normal = new Texture(Gdx.files.internal("normal.jpg"));
 	}
 
 	public void dispose() {
@@ -56,11 +58,14 @@ public class TestShader implements Shader {
 
 	public void render(Renderable renderable) {
 		program.setUniformMatrix(u_worldTrans, renderable.worldTransform);
-		program.setUniformf(u_color, 1,1,1);
+		program.setUniformf(u_color, 0.2f, 0.2f, 0.2f);
 		program.setUniformf(u_cam, camera.position);
 		program.setUniformf(u_light, 1.5f, 1f, 0.5f);
 		program.setUniformf(u_lightColor, 0.7f, 0.6f, 0.5f);
+		texture.bind(0);
 		program.setUniformi(u_texture, 0);
+		normal.bind(1);
+		program.setUniformi(u_normal, 1);
 		renderable.mesh.render(program, renderable.primitiveType, renderable.meshPartOffset, renderable.meshPartSize);
 	}
 

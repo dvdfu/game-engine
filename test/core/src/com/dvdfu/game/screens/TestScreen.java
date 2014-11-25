@@ -21,7 +21,6 @@ import com.badlogic.gdx.graphics.g3d.utils.DefaultTextureBinder;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.graphics.g3d.utils.RenderContext;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Vector3;
 import com.dvdfu.game.MainGame;
 import com.dvdfu.game.TestShader;
 
@@ -30,13 +29,6 @@ public class TestScreen extends AbstractScreen {
 	private CameraInputController camController;
 	private ModelBatch modelBatch;
 	private Model model;
-	private ModelInstance sphere;
-	private ModelInstance cube1;
-	private ModelInstance cube2;
-	private ModelInstance cube3;
-	private ModelInstance axisX;
-	private ModelInstance axisY;
-	private ModelInstance axisZ;
 	private ArrayList<ModelInstance> instances;
 	private Environment environment;
 	private Renderable renderable;
@@ -54,6 +46,8 @@ public class TestScreen extends AbstractScreen {
 		environment.add(new DirectionalLight().set(0.11f, 0.08f, 0.14f, 1.5f, 1.0f, 0.5f)); // direct light
 
 		cam = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+	    cam.position.set(0, 1, 0);
+	    cam.lookAt(0, 0, 0);
 		cam.near = -3000f; // defines closest distance to draw
 		cam.far = 3000f; // defines farthest distance to draw
 		cam.update();
@@ -63,58 +57,28 @@ public class TestScreen extends AbstractScreen {
 		modelBatch = new ModelBatch();
 
 		ModelBuilder modelBuilder = new ModelBuilder();
-		model = modelBuilder.createSphere(140, 140, 140, 60, 60,
+		model = modelBuilder.createSphere(320, 320, 320, 40, 40,
 				new Material(ColorAttribute.createDiffuse(Color.CYAN)),
 				Usage.Position | Usage.Normal | Usage.TextureCoordinates);
-		sphere = new ModelInstance(model);
+//		model = new ObjLoader().loadModel(Gdx.files.internal("teapot.obj"));
 		instances = new ArrayList<ModelInstance>();
 		for (int i = 0; i < 1; i++) {
 			ModelInstance in = new ModelInstance(model);
-//			in.transform.set((i / 4) * 100, 0, (i % 4) * 100, 0, 0, 0, 0, i / 20f, i / 20f, i / 20f);
+//			in.materials.get(0).set(ColorAttribute.createDiffuse(Color.RED));
+			in.transform.setToTranslation((i / 16) * 160, 0, (i % 16) * 160);
 			instances.add(in);
 		}
-		model = modelBuilder.createBox(50, 100, 150,
-				new Material(ColorAttribute.createDiffuse(Color.CYAN)),
-				Usage.Position | Usage.Normal | Usage.TextureCoordinates);
-		cube1 = new ModelInstance(model);
-		model = modelBuilder.createBox(150, 50, 100,
-				new Material(ColorAttribute.createDiffuse(Color.CYAN)),
-				Usage.Position | Usage.Normal | Usage.TextureCoordinates);
-		cube2 = new ModelInstance(model);
-		model = modelBuilder.createBox(100, 150, 50,
-				new Material(ColorAttribute.createDiffuse(Color.CYAN)),
-				Usage.Position | Usage.Normal | Usage.TextureCoordinates);
-		cube3 = new ModelInstance(model);
-		model = modelBuilder.createArrow(new Vector3(0, 0, 0), new Vector3(200,
-				0, 0), new Material(ColorAttribute.createDiffuse(Color.RED)),
-				Usage.Position | Usage.Normal);
-		axisX = new ModelInstance(model);
-		model = modelBuilder.createArrow(new Vector3(0, 0, 0), new Vector3(0,
-				200, 0),
-				new Material(ColorAttribute.createDiffuse(Color.GREEN)),
-				Usage.Position | Usage.Normal);
-		axisY = new ModelInstance(model);
-		model = modelBuilder.createArrow(new Vector3(0, 0, 0), new Vector3(0,
-				0, 200),
-				new Material(ColorAttribute.createDiffuse(Color.BLUE)),
-				Usage.Position | Usage.Normal);
-		axisZ = new ModelInstance(model);
 
 		renderable = new Renderable();
-		sphere.nodes.get(0).parts.get(0).setRenderable(renderable);
-//		cube.nodes.get(0).parts.get(0).setRenderable(renderable);
+		model.nodes.get(0).parts.get(0).setRenderable(renderable);
 		renderable.environment = environment;
 //		renderable.primitiveType = GL20.GL_POINTS;
 		renderable.worldTransform.idt();
 
 		renderContext = new RenderContext(new DefaultTextureBinder(DefaultTextureBinder.WEIGHTED, 1));
-	    shader = new TestShader();
+	    // shader = new DefaultShader(renderable);
+		shader = new TestShader();
 	    shader.init();
-	    
-	    cam.position.set(0, 0, 1);
-	    cube1.transform.set(0, 150, 0, 0, 0, 0, 0);
-	    cube2.transform.set(0, 0, 150, 0, 0, 0, 0);
-	    cube3.transform.set(150, 0, 0, 0, 0, 0, 0);
 	}
 
 	public void render(float delta) {
@@ -130,23 +94,18 @@ public class TestScreen extends AbstractScreen {
 		cam.up.set(0, 1, 0);
 		cam.update();
 
-//		renderContext.begin();
-//		shader.begin(cam, renderContext);
-//		shader.render(renderable);
-//		shader.end();
-//		renderContext.end();
+		renderContext.begin();
+		shader.begin(cam, renderContext);
+		shader.render(renderable);
+		shader.end();
+		renderContext.end();
 
-		modelBatch.begin(cam);
-		for (int i = 0; i < instances.size(); i++) {
-			modelBatch.render(instances.get(i), shader);
-		}
-//		modelBatch.render(cube1, shader);
-//		modelBatch.render(cube2, shader);
-//		modelBatch.render(cube3, shader);
-//		modelBatch.render(axisX, shader);
-//		modelBatch.render(axisY, shader);
-//		modelBatch.render(axisZ, shader);
-		modelBatch.end();
+//		modelBatch.begin(cam);
+//		for (int i = 0; i < instances.size(); i++) {
+//			modelBatch.render(instances.get(i), shader);
+////			instances.get(i).transform.rotate(new Vector3(0, 1, 0), 1);
+//		}
+//		modelBatch.end();
 	}
 
 	public void resize(int width, int height) {
